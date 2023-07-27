@@ -2,9 +2,8 @@ import { Button, Flex, Image, Input, Stack, Text } from "@chakra-ui/react";
 import React, { FC, memo } from "react";
 
 import logoImage from "../../images/ログインロゴ.png";
-import { useLocation } from "react-router-dom";
 
-export const Login: FC = memo(() => {
+export const SignUp: FC = memo(() => {
   return (
     <>
       <Flex align="center" justify="center" direction="column" height="90vh">

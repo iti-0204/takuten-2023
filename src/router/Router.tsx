@@ -1,16 +1,20 @@
 import React, { FC, memo } from "react";
 import { Route, Switch } from "react-router-dom";
-import { Login } from "../components/pages/Login";
 
 import { homeRoutes } from "./HomeRoutes";
 import { Page404 } from "../components/pages/Page404";
 import { HeaderLayout } from "../components/templates/HeaderLayout";
+import { Login } from "../components/pages/Login";
+import { SignUp } from "../components/pages/SignUp";
 
 export const Router: FC = memo(() => {
   return (
     <Switch>
       <Route exact path="/">
         <Login />
+      </Route>
+      <Route path="/sign_up">
+        <SignUp />
       </Route>
       <Route
         path="/home"
