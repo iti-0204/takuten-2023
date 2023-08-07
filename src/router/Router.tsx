@@ -6,6 +6,7 @@ import { Page404 } from "../components/pages/Page404";
 import { HeaderLayout } from "../components/templates/HeaderLayout";
 import { Login } from "../components/pages/Login";
 import { SignUp } from "../components/pages/SignUp";
+import { PasswordForget } from "../components/pages/PasswordForget";
 
 export const Router: FC = memo(() => {
   return (
@@ -15,6 +16,9 @@ export const Router: FC = memo(() => {
       </Route>
       <Route path="/sign_up">
         <SignUp />
+      </Route>
+      <Route path="/password_forget">
+        <PasswordForget />
       </Route>
       <Route
         path="/home"
