@@ -19,6 +19,7 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@types/react-router-dom": "^5.3.3",
+    "axios": "^1.4.0",
     "date-fns": "^2.30.0",
     "framer-motion": "^10.13.0",
     "react": "^18.2.0",

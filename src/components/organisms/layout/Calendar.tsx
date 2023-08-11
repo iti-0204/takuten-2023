@@ -15,6 +15,7 @@ import {
   Input,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -81,7 +82,6 @@ export const Calendar = (): JSX.Element => {
     .fc .fc-scrollgrid {
       border-width: 0 0 0 0;
     }
-
 
     .fc .fc-scrollgrid-sync-table {
       border: 1px;
@@ -201,6 +201,7 @@ export const Calendar = (): JSX.Element => {
           >
             作成
           </ModalHeader>
+          <ModalCloseButton color="white" />
           <ModalBody padding="0px" mt="45px">
             <VStack spacing="15px">
               {/* タイトル */}
