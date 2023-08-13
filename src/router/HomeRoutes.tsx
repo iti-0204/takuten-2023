@@ -27,6 +27,16 @@ export const homeRoutes = [
     exact: false,
     children: <SignUp />,
   },
+  // {
+  //   path: "/mypage",
+  //   exact: false,
+  //   children: <Payment />,
+  // },
+  // {
+  //   path: "/notice",
+  //   exact: false,
+  //   children: <Payment />,
+  // },
   {
     path: "*",
     exact: false,

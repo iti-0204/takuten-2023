@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import React, { FC, memo, useCallback } from "react";
 import {
   Flex,
   Image,
@@ -12,8 +12,13 @@ import {
 
 import img1 from "../../../images/logo_and_moji_1.png";
 import { MenuDrawer } from "../../molecules/MenuDrawer";
+import { useHistory } from "react-router-dom";
 
 export const Header: FC = memo(() => {
+  const history = useHistory();
+  const onClickMypage = useCallback(() => history.push("/mypage"), []);
+  const onClickNotice = useCallback(() => history.push("/notice"), []);
+  const onClickLogin = useCallback(() => history.push("/"), []);
   return (
     <>
       <Flex
@@ -48,14 +53,18 @@ export const Header: FC = memo(() => {
               py="6px"
               borderTopLeftRadius="15px"
               borderTopRightRadius="15px"
+              onClick={onClickMypage}
             >
               マイページ
             </MenuItem>
-            <MenuItem py="6px">お知らせ</MenuItem>
+            <MenuItem py="6px" onClick={onClickNotice}>
+              お知らせ
+            </MenuItem>
             <MenuItem
               py="6px"
               borderBottomLeftRadius="15px"
               borderBottomRightRadius="15px"
+              onClick={onClickLogin}
             >
               ログアウト
             </MenuItem>
