@@ -7,6 +7,8 @@ import { HeaderLayout } from "../components/templates/HeaderLayout";
 import { Login } from "../components/pages/Login";
 import { SignUp } from "../components/pages/SignUp";
 import { PasswordForget } from "../components/pages/PasswordForget";
+import { Mypage } from "../components/pages/Mypage";
+import { Notice } from "../components/pages/Notice";
 
 export const Router: FC = memo(() => {
   return (
@@ -36,6 +38,12 @@ export const Router: FC = memo(() => {
           </Switch>
         )}
       ></Route>
+      <Route path="/mypage">
+        <Mypage />
+      </Route>
+      <Route path="/notice">
+        <Notice />
+      </Route>
       <Route path="*">
         <Page404 />
       </Route>
