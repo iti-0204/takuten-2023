@@ -8,39 +8,19 @@ export const useAuth = () => {
   let match = false;
   const history = useHistory();
   const login = useCallback(
-    (email: string) => {
-      axios
-        .get("http://127.0.0.1:8000/apiapp/profile/", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((res) => {
-          console.log("できた");
-          res.data.forEach(function (value: any) {
-            console.log(email);
-            if (value.id == email) {
-              match = true;
-              history.push("/home");
-            }
-          });
-          // if (match) {
-          //   history.push("/home");
-          // }
-        })
-        .catch((err: any) => console.log(err))
-        .finally(() => console.log("finally"));
+    (email: any, password: any) => {
+      fetchAsyncLogin(email, password);
     },
     [history]
   );
 
   // ここからサインアップ
 
-  const fetchRegister = useCallback(() => {
+  const fetchRegister = useCallback((email: any, password: any) => {
     axios
       .post(
         "http://127.0.0.1:8000/apiapp/register/",
-        { email: "user60021@gmail.com", password: "user10000" },
+        { email: email, password: password },
         {
           headers: {
             "Content-Type": "application/json",
@@ -49,7 +29,7 @@ export const useAuth = () => {
       )
       .then((res) => {
         if (res.data) {
-          fetchAsyncLogin();
+          fetchAsyncLogin(email, password);
         } else {
           console.log(
             "エラーが発生しました。このメールアドレスはすでに使用されている可能性があります。"
@@ -59,13 +39,13 @@ export const useAuth = () => {
       .catch((err: any) => console.log("サインアップできません"));
   }, []);
 
-  const fetchAsyncLogin = useCallback(() => {
+  const fetchAsyncLogin = useCallback((email: any, password: any) => {
     axios
       .post(
         "http://127.0.0.1:8000/authen/jwt/create",
         {
-          email: "user60021@gmail.com",
-          password: "user10000",
+          email: email,
+          password: password,
         },
         {
           headers: {
@@ -79,7 +59,8 @@ export const useAuth = () => {
           console.log(res.data.access);
           console.log("アクセストークン取得成功");
           console.log(`JWT ${localStorage.getItem("localJWT")}`);
-          fetchAsyncGetProfs();
+          // fetchAsyncGetProfs();
+          history.push("/home");
         } else {
           console.log("アクセストークンでエラーが発生しました。");
         }
@@ -114,9 +95,12 @@ export const useAuth = () => {
       .catch((err: any) => console.log("全てのプロフが取得できません"));
   }, []);
 
-  const signup = useCallback(() => {
-    fetchRegister();
-    // fetchAsyncLogin();
-  }, [history]);
+  const signup = useCallback(
+    (email: any, password: any) => {
+      fetchRegister(email, password);
+      // fetchAsyncLogin();
+    },
+    [history]
+  );
   return { login, signup };
 };

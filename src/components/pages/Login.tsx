@@ -6,17 +6,22 @@ import { useHistory, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
 export const Login: FC = memo(() => {
-  const {login} = useAuth();
+  const { login } = useAuth();
   const history = useHistory();
   const onClickSignUp = useCallback(() => history.push("/sign_up"), []);
   const onClickForget = useCallback(() => history.push("/password_forget"), []);
 
   const [emailAddress, setEmailAddress] = useState("");
 
+  const [password, setPassword] = useState("");
+
   const onChangeEmailAddress = (e: ChangeEvent<HTMLInputElement>) =>
     setEmailAddress(e.target.value);
 
-  const onClickLogin = () => login(emailAddress);
+  const onChangePassword = (e: ChangeEvent<HTMLInputElement>) =>
+    setPassword(e.target.value);
+
+  const onClickLogin = () => login(emailAddress, password);
   // ボタンにこの関数を追加する
 
   return (
@@ -31,7 +36,13 @@ export const Login: FC = memo(() => {
             value={emailAddress}
             onChange={onChangeEmailAddress}
           ></Input>
-          <Input placeholder="パスワード" w="316px" h="44px"></Input>
+          <Input
+            placeholder="パスワード"
+            w="316px"
+            h="44px"
+            value={password}
+            onChange={onChangePassword}
+          ></Input>
         </Stack>
         <Button
           w="316px"

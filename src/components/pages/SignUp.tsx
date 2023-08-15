@@ -1,5 +1,5 @@
 import { Button, Flex, Image, Input, Stack, Text } from "@chakra-ui/react";
-import React, { FC, memo, useCallback } from "react";
+import React, { ChangeEvent, FC, memo, useCallback, useState } from "react";
 
 import logoImage from "../../images/logo_and_moji_2.png";
 import { useHistory } from "react-router-dom";
@@ -10,16 +10,37 @@ export const SignUp: FC = memo(() => {
   const history = useHistory();
   const onClickBack = useCallback(() => history.goBack(), []);
 
-  const onClickSignUp = () => signup();
+  const [emailAddress, setEmailAddress] = useState("");
+
+  const [password, setPassword] = useState("");
+
+  const onChangeEmailAddress = (e: ChangeEvent<HTMLInputElement>) =>
+    setEmailAddress(e.target.value);
+
+  const onChangePassword = (e: ChangeEvent<HTMLInputElement>) =>
+    setPassword(e.target.value);
+
+  const onClickSignUp = () => signup(emailAddress, password);
 
   return (
     <>
       <Flex align="center" justify="center" direction="column" height="90vh">
         <Image src={logoImage} alt="サービスロゴ" boxSize="180px" />
         <Stack spacing={8} py="70px">
-          <Input placeholder="ユーザー名" w="316px" h="44px"></Input>
-          <Input placeholder="メールアドレス" w="316px" h="44px"></Input>
-          <Input placeholder="パスワード" w="316px" h="44px"></Input>
+          <Input
+            placeholder="メールアドレス"
+            w="316px"
+            h="44px"
+            value={emailAddress}
+            onChange={onChangeEmailAddress}
+          ></Input>
+          <Input
+            placeholder="パスワード"
+            w="316px"
+            h="44px"
+            value={password}
+            onChange={onChangePassword}
+          ></Input>
         </Stack>
         <Button
           w="316px"

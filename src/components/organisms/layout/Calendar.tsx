@@ -5,6 +5,9 @@ import jaLocale from "@fullcalendar/core/locales/ja";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { format } from "date-fns";
+import DatePicker, { registerLocale } from "react-datepicker";
+import ja from "date-fns/locale/ja";
+import "react-datepicker/dist/react-datepicker.css";
 
 import {
   Box,
@@ -26,6 +29,7 @@ import {
 } from "@chakra-ui/react";
 import { ClassNames } from "@emotion/react";
 import { styled } from "styled-components";
+import { useState } from "react";
 const events: EventInput[] = [
   {
     title: "飲み会",
@@ -40,6 +44,10 @@ const events: EventInput[] = [
 export const Calendar = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const onClickSelect = () => onOpen();
+
+  const Today = new Date();
+  const [startdate, setStartDate] = useState(Today);
+  const [enddate, setEndDate] = useState(Today);
 
   // カレンダーモーダルの装飾
   const ModalStyle = styled.div`
@@ -225,12 +233,20 @@ export const Calendar = (): JSX.Element => {
                     <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
                       開始
                     </FormLabel>
-                    <Input
+                    <DatePicker
+                      dateFormat="yyyy/MM/dd"
+                      selected={startdate}
+                      minDate={Today}
+                      onChange={(selectedDate) => {
+                        setStartDate(selectedDate || Today);
+                      }}
+                    />
+                    {/* <Input
                       placeholder="開始時間"
                       variant="unstyled"
                       flexBasis="75%"
                       textAlign="right"
-                    ></Input>
+                    ></Input> */}
                   </ModalStyleUnderbar>
                 </FormControl>
                 {/* 終了時間 */}
@@ -239,12 +255,20 @@ export const Calendar = (): JSX.Element => {
                     <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
                       終了
                     </FormLabel>
-                    <Input
+                    <DatePicker
+                      dateFormat="yyyy/MM/dd"
+                      selected={enddate}
+                      minDate={Today}
+                      onChange={(selectedDate) => {
+                        setEndDate(selectedDate || Today);
+                      }}
+                    />
+                    {/* <Input
                       placeholder="終了時間"
                       variant="unstyled"
                       flexBasis="75%"
                       textAlign="right"
-                    ></Input>
+                    ></Input> */}
                   </ModalStyle>
                 </FormControl>
               </Box>
