@@ -3,10 +3,14 @@ import React, { FC, memo, useCallback } from "react";
 
 import logoImage from "../../images/logo_and_moji_2.png";
 import { useHistory } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 export const SignUp: FC = memo(() => {
+  const { signup } = useAuth();
   const history = useHistory();
   const onClickBack = useCallback(() => history.goBack(), []);
+
+  const onClickSignUp = () => signup();
 
   return (
     <>
@@ -22,6 +26,7 @@ export const SignUp: FC = memo(() => {
           h="44px"
           backgroundColor="baseColors.blue"
           color="white"
+          onClick={onClickSignUp}
         >
           登録する
         </Button>
