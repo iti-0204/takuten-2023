@@ -29,139 +29,174 @@ import {
 } from "@chakra-ui/react";
 import { ClassNames } from "@emotion/react";
 import { styled } from "styled-components";
-import { useState } from "react";
-const events: EventInput[] = [
-  {
-    title: "飲み会",
-    start: format(new Date(), "yyyy-MM-dd"),
-  },
-  {
-    title: "旅行",
-    start: format(new Date(), "yyyy-MM-dd"),
-  },
-];
+import { ChangeEvent, useCallback, useState } from "react";
+import { useSchedule } from "../../../hooks/useSchedule";
+import { start } from "repl";
+
+// カレンダーモーダルの装飾
+const ModalStyle = styled.div`
+  display: flex;
+  height: 36px;
+  width: 100%;
+  padding-left: 14px;
+  padding-right: 30px;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+`;
+
+// カレンダーの見た目装飾
+const StyleWrapper = styled.div`
+  .fc .fc-daygrid-day-top {
+    justify-content: center;
+    font-size: 10px;
+  }
+  .fc .fc-col-header-cell-cushion {
+    font-size: 10px;
+    font-weight: 100;
+  }
+
+  .fc th {
+    border: none;
+  }
+
+  .fc .fc-scrollgrid-section > * {
+    border-width: 0px;
+  }
+
+  .fc .fc-col-header-cell {
+    border: none;
+  }
+  .fc .fc-scrollgrid {
+    border-width: 0 0 0 0;
+  }
+
+  .fc .fc-scrollgrid-sync-table {
+    border: 1px;
+  }
+
+  th.fc-day-sat .fc-col-header-cell-cushion {
+    color: #4c9bca;
+  }
+  th.fc-day-sun .fc-col-header-cell-cushion {
+    color: #eb6452;
+  }
+  td.fc-day-sat .fc-daygrid-day-number {
+    color: #4c9bca;
+  }
+  td.fc-day-sun .fc-daygrid-day-number {
+    color: #eb6452;
+  }
+
+  .fc .fc-button .fc-icon {
+    font-size: 26px;
+  }
+
+  .fc .fc-button {
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .fc-h-event {
+    background-color: #f7cb59;
+    border: none;
+    border-radius: 4px;
+  }
+
+  .fc-h-event .fc-event-main-frame {
+    border-color: #f7cb59;
+    /* border-radius: 20px; */
+  }
+
+  .fc-h-event .fc-event-title-container {
+    background-color: #f7cb59;
+    border-radius: 4px;
+  }
+
+  .fc-h-event .fc-event-main-frame {
+    text-align: center;
+  }
+
+  .fc .fc-button-primary {
+    background-color: #fdfbf6;
+    &:hover {
+      border: none;
+    }
+    &:not(:disabled):active {
+      background-color: #fdfbf6;
+      border-color: #fdfbf6;
+      color: #fdfbf6;
+      box-shadow: none;
+    }
+    &:focus {
+      box-shadow: none;
+    }
+    border: none;
+  }
+  .fc-icon-chevron-right {
+    /* color: red; */
+    color: #cecece;
+  }
+  .fc-icon-chevron-left {
+    /* color: red; */
+    color: #cecece;
+  }
+`;
+
+const InputForm = (props: any) => {
+  return (
+    <>
+      <ModalStyle>
+        <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
+          {props.placeholder}
+        </FormLabel>
+        <Input
+          placeholder={props.placeholder}
+          variant="unstyled"
+          flexBasis="75%"
+          textAlign="right"
+          value={props.value}
+          onChange={props.onChange}
+        ></Input>
+      </ModalStyle>
+    </>
+  );
+};
 
 export const Calendar = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const onClickSelect = () => onOpen();
 
+  const { PostSchedule } = useSchedule();
+
   const Today = new Date();
+  // 開始時間と終了時間
   const [startdate, setStartDate] = useState(Today);
   const [enddate, setEndDate] = useState(Today);
+  //タイトル
+  const [title, setTitle] = useState("");
+  //予算
+  const [budget, setBudget] = useState("");
+  //部屋番号
+  const [password, setPassword] = useState("");
 
-  // カレンダーモーダルの装飾
-  const ModalStyle = styled.div`
-    display: flex;
-    height: 36px;
-    width: 100%;
-    padding-left: 14px;
-    padding-right: 30px;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-  `;
+  const onChangeTitle = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  }, []);
+  const onChangeBudget = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setBudget(e.target.value);
+  }, []);
+
+  const onChangePassword = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  }, []);
+
+  const onClickPostSchedule = () =>
+    PostSchedule(title, startdate, enddate, budget, password);
 
   const ModalStyleUnderbar = styled(ModalStyle)`
     border-bottom: 1px solid #d9d9d9;
-  `;
-
-  // カレンダーの見た目装飾
-  const StyleWrapper = styled.div`
-    .fc .fc-daygrid-day-top {
-      justify-content: center;
-      font-size: 10px;
-    }
-    .fc .fc-col-header-cell-cushion {
-      font-size: 10px;
-      font-weight: 100;
-    }
-
-    .fc th {
-      border: none;
-    }
-
-    .fc .fc-scrollgrid-section > * {
-      border-width: 0px;
-    }
-
-    .fc .fc-col-header-cell {
-      border: none;
-    }
-    .fc .fc-scrollgrid {
-      border-width: 0 0 0 0;
-    }
-
-    .fc .fc-scrollgrid-sync-table {
-      border: 1px;
-    }
-
-    th.fc-day-sat .fc-col-header-cell-cushion {
-      color: #4c9bca;
-    }
-    th.fc-day-sun .fc-col-header-cell-cushion {
-      color: #eb6452;
-    }
-    td.fc-day-sat .fc-daygrid-day-number {
-      color: #4c9bca;
-    }
-    td.fc-day-sun .fc-daygrid-day-number {
-      color: #eb6452;
-    }
-
-    .fc .fc-button .fc-icon {
-      font-size: 26px;
-    }
-
-    .fc .fc-button {
-      &:focus {
-        box-shadow: none;
-      }
-    }
-
-    .fc-h-event {
-      background-color: #f7cb59;
-      border: none;
-      border-radius: 4px;
-    }
-
-    .fc-h-event .fc-event-main-frame {
-      border-color: #f7cb59;
-      /* border-radius: 20px; */
-    }
-
-    .fc-h-event .fc-event-title-container {
-      background-color: #f7cb59;
-      border-radius: 4px;
-    }
-
-    .fc-h-event .fc-event-main-frame {
-      text-align: center;
-    }
-
-    .fc .fc-button-primary {
-      background-color: #fdfbf6;
-      &:hover {
-        border: none;
-      }
-      &:not(:disabled):active {
-        background-color: #fdfbf6;
-        border-color: #fdfbf6;
-        color: #fdfbf6;
-        box-shadow: none;
-      }
-      &:focus {
-        box-shadow: none;
-      }
-      border: none;
-    }
-    .fc-icon-chevron-right {
-      /* color: red; */
-      color: #cecece;
-    }
-    .fc-icon-chevron-left {
-      /* color: red; */
-      color: #cecece;
-    }
   `;
 
   return (
@@ -175,7 +210,7 @@ export const Calendar = (): JSX.Element => {
           initialView="dayGridMonth"
           locales={[jaLocale]}
           locale="ja"
-          initialEvents={events}
+          // initialEvents={events}
           selectable={true}
           headerToolbar={{
             start: "prev",
@@ -214,17 +249,11 @@ export const Calendar = (): JSX.Element => {
             <VStack spacing="15px">
               {/* タイトル */}
               <FormControl>
-                <ModalStyle>
-                  <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
-                    タイトル
-                  </FormLabel>
-                  <Input
-                    placeholder="タイトル"
-                    variant="unstyled"
-                    flexBasis="75%"
-                    textAlign="right"
-                  ></Input>
-                </ModalStyle>
+                <InputForm
+                  placeholder="タイトル"
+                  value={title}
+                  onChange={onChangeTitle}
+                />
               </FormControl>
               {/* 開始時間 */}
               <Box w="100%">
@@ -274,74 +303,62 @@ export const Calendar = (): JSX.Element => {
               </Box>
               {/* 予算 */}
               <FormControl>
-                <ModalStyle>
-                  <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
-                    予算
-                  </FormLabel>
-                  <Input
-                    placeholder="予算"
-                    variant="unstyled"
-                    flexBasis="75%"
-                    textAlign="right"
-                  ></Input>
-                </ModalStyle>
+                <InputForm
+                  placeholder="予算"
+                  value={budget}
+                  onChange={onChangeBudget}
+                />
               </FormControl>
-              {/* メンバー */}
+              {/* 部屋番号 */}
+              <FormControl>
+                <InputForm
+                  placeholder="部屋番号"
+                  value={password}
+                  onChange={onChangePassword}
+                />
+              </FormControl>
+              {/* 貢献度
               <FormControl>
                 <ModalStyle>
-                  <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
-                    メンバー
-                  </FormLabel>
-                  <Input
-                    placeholder="メンバー"
-                    variant="unstyled"
-                    flexBasis="75%"
-                    textAlign="right"
-                  ></Input>
+                <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
+                  貢献度
+                </FormLabel>
+                <Input
+                  placeholder="貢献度"
+                  variant="unstyled"
+                  flexBasis="75%"
+                  textAlign="right"
+                ></Input>
                 </ModalStyle>
-              </FormControl>
-              {/* 貢献度 */}
+              </FormControl> */}
+              {/* 場所
               <FormControl>
                 <ModalStyle>
-                  <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
-                    貢献度
-                  </FormLabel>
-                  <Input
-                    placeholder="貢献度"
-                    variant="unstyled"
-                    flexBasis="75%"
-                    textAlign="right"
-                  ></Input>
+                <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
+                  場所
+                </FormLabel>
+                <Input
+                  placeholder="場所"
+                  variant="unstyled"
+                  flexBasis="75%"
+                  textAlign="right"
+                ></Input>
                 </ModalStyle>
               </FormControl>
-              {/* 場所 */}
+              集合
               <FormControl>
                 <ModalStyle>
-                  <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
-                    場所
-                  </FormLabel>
-                  <Input
-                    placeholder="場所"
-                    variant="unstyled"
-                    flexBasis="75%"
-                    textAlign="right"
-                  ></Input>
+                <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
+                  集合
+                </FormLabel>
+                <Input
+                  placeholder="集合"
+                  variant="unstyled"
+                  flexBasis="75%"
+                  textAlign="right"
+                ></Input>
                 </ModalStyle>
-              </FormControl>
-              {/* 集合 */}
-              <FormControl>
-                <ModalStyle>
-                  <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
-                    集合
-                  </FormLabel>
-                  <Input
-                    placeholder="集合"
-                    variant="unstyled"
-                    flexBasis="75%"
-                    textAlign="right"
-                  ></Input>
-                </ModalStyle>
-              </FormControl>
+              </FormControl> */}
             </VStack>
           </ModalBody>
           <ModalFooter justifyContent="center">
@@ -362,6 +379,7 @@ export const Calendar = (): JSX.Element => {
                 fontWeight="medium"
                 fontSize="14px"
                 color="white"
+                onClick={onClickPostSchedule}
               >
                 決定
               </Button>
