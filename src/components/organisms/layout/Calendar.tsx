@@ -316,8 +316,8 @@ export const Calendar = (): JSX.Element => {
             center: "title",
             end: "next",
           }}
-          select={onClickSelect}
-          // eventClick={onClickEvent}
+          // select={onClickSelect}
+          dateClick={onClickSelect}
           eventClick={(e) => {
             // event_title = e.event._def.title;
             setEvent_title(e.event._def.title);
