@@ -1,5 +1,10 @@
 import FullCalendar from "@fullcalendar/react";
-import { DayCellContentArg, EventInput } from "@fullcalendar/core";
+import {
+  DayCellContentArg,
+  EventInput,
+  DateSelectArg,
+  CalendarApi,
+} from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import jaLocale from "@fullcalendar/core/locales/ja";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -212,7 +217,7 @@ const InputInUnder = (props: any) => {
 export const Calendar = (): JSX.Element => {
   const modal1 = useDisclosure();
   const modal2 = useDisclosure();
-  const onClickSelect = modal1.onOpen;
+  const onClickClose = modal1.onClose;
 
   const onClickEvent = modal2.onOpen;
   // type schedules = {
@@ -225,7 +230,7 @@ export const Calendar = (): JSX.Element => {
   //   password: number;
   // };
 
-  const { PostSchedule, schedules } = useSchedule();
+  const { PostSchedule, loading2, schedules } = useSchedule();
 
   const { getAllSchedules, loading, allschedules } = useAllSchedules();
 
@@ -249,6 +254,10 @@ export const Calendar = (): JSX.Element => {
   const [event_password, setEvent_password] = useState("");
 
   const [eventlist, setEventlist] = useState<object[]>([]);
+
+  const [effectNum, setEffectNum] = useState(1);
+
+  // const [eventapi, setEventapi] = useState<any>();
 
   const onChangeTitle = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -278,6 +287,13 @@ export const Calendar = (): JSX.Element => {
     setStringEndDate(stringvalue);
   };
 
+  const onClickSelect = useCallback((selectInfo: DateSelectArg) => {
+    const calendarApi = selectInfo.view.calendar;
+    console.log(calendarApi);
+    console.log("愛あいあいあいあいあいあい");
+    // setEventapi(calendarApi);
+  }, []);
+
   // const onChangeStartDate = useCallback((e: ChangeEvent<HTMLInputElement>) => {
   //   setStartDate(e.target.value);
   // }, []);
@@ -290,6 +306,19 @@ export const Calendar = (): JSX.Element => {
       Number(budget),
       Number(password)
     );
+    {
+      loading2 ? (
+        <Center h="100vh">
+          <Spinner />
+        </Center>
+      ) : (
+        window.location.reload()
+      );
+    }
+  };
+
+  const changeEffectNum = () => {
+    setEffectNum(effectNum + 1);
   };
 
   const ModalStyleUnderbar = styled(ModalStyle)`
@@ -312,11 +341,9 @@ export const Calendar = (): JSX.Element => {
 
   //useallスケジュールでeventsのオブジェクトを作っちゃう
 
-  useEffect(() => getAllSchedules, []);
+  useEffect(() => getAllSchedules, [effectNum]);
 
-  console.log(allschedules[0]);
-
-  // const title1 = allschedules[0].title;
+  const addevents = [...allschedules];
 
   return (
     <>
@@ -343,7 +370,8 @@ export const Calendar = (): JSX.Element => {
                 center: "title",
                 end: "next",
               }}
-              dateClick={onClickSelect}
+              dateClick={modal1.onOpen}
+              select={onClickSelect}
               eventClick={(e) => {
                 // event_title = e.event._def.title;
                 setEvent_title(e.event._def.title);
@@ -455,7 +483,13 @@ export const Calendar = (): JSX.Element => {
                     fontWeight="medium"
                     fontSize="14px"
                     color="white"
-                    onClick={onClickPostSchedule}
+                    onClick={() => {
+                      // changeEffectNum();
+                      onClickPostSchedule();
+                      onClickClose();
+
+                      // onClickAddEvent();
+                    }}
                   >
                     決定
                   </Button>
