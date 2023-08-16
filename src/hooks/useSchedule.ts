@@ -21,13 +21,14 @@ export const useSchedule = () => {
       console.log(finished_at);
       console.log(budget);
       console.log(password);
+
       axios
         .post(
           "http://127.0.0.1:8000/apiapp/schedule/",
           {
             title: title,
-            started_at: started_at,
-            finished_at: finished_at,
+            started_at: "2023-08-17",
+            finished_at: "2023-08-18",
             budget: budget,
             password: password,
           },

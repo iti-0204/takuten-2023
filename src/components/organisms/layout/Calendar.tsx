@@ -173,7 +173,9 @@ export const Calendar = (): JSX.Element => {
   const Today = new Date();
   // 開始時間と終了時間
   const [startdate, setStartDate] = useState(Today);
+  const [stringstartdate, setStringStartDate] = useState("");
   const [enddate, setEndDate] = useState(Today);
+  const [stringenddate, setStringEndDate] = useState("");
   //タイトル
   const [title, setTitle] = useState("");
   //予算
@@ -189,11 +191,38 @@ export const Calendar = (): JSX.Element => {
   }, []);
 
   const onChangePassword = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e);
     setPassword(e.target.value);
   }, []);
 
+  const onChangeStringStartDate = (e: any) => {
+    setStartDate(e);
+    const result = new Date(e).toLocaleDateString("ja-JP");
+    const stringvalue = result.replace(/\u002f/g, "-");
+    console.log(stringvalue);
+    setStringStartDate(stringvalue);
+  };
+
+  const onChangeStringEndDate = (e: any) => {
+    setEndDate(e);
+    const result = new Date(e).toLocaleDateString("ja-JP");
+    const stringvalue = result.replace(/\u002f/g, "-");
+    console.log(stringvalue);
+    setStringEndDate(stringvalue);
+  };
+
+  // const onChangeStartDate = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  //   setStartDate(e.target.value);
+  // }, []);
+
   const onClickPostSchedule = () =>
-    PostSchedule(title, startdate, enddate, budget, password);
+    PostSchedule(
+      title,
+      stringstartdate,
+      stringenddate,
+      Number(budget),
+      Number(password)
+    );
 
   const ModalStyleUnderbar = styled(ModalStyle)`
     border-bottom: 1px solid #d9d9d9;
@@ -263,12 +292,10 @@ export const Calendar = (): JSX.Element => {
                       開始
                     </FormLabel>
                     <DatePicker
-                      dateFormat="yyyy/MM/dd"
+                      dateFormat="yyyy-MM-dd"
                       selected={startdate}
                       minDate={Today}
-                      onChange={(selectedDate) => {
-                        setStartDate(selectedDate || Today);
-                      }}
+                      onChange={onChangeStringStartDate}
                     />
                     {/* <Input
                       placeholder="開始時間"
@@ -285,12 +312,11 @@ export const Calendar = (): JSX.Element => {
                       終了
                     </FormLabel>
                     <DatePicker
-                      dateFormat="yyyy/MM/dd"
+                      locale="ja"
+                      dateFormat="yyyy-MM-dd"
                       selected={enddate}
                       minDate={Today}
-                      onChange={(selectedDate) => {
-                        setEndDate(selectedDate || Today);
-                      }}
+                      onChange={onChangeStringEndDate}
                     />
                     {/* <Input
                       placeholder="終了時間"
