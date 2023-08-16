@@ -12,6 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import {
   Box,
   Button,
+  Center,
   Flex,
   FormControl,
   FormLabel,
@@ -23,15 +24,17 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Stack,
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { ClassNames } from "@emotion/react";
 import { styled } from "styled-components";
-import { ChangeEvent, useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useSchedule } from "../../../hooks/useSchedule";
 import { start } from "repl";
+import { useAllSchedules } from "../../../hooks/useAllSchedules";
 
 // カレンダーモーダルの装飾
 const ModalStyle = styled.div`
@@ -207,15 +210,24 @@ const InputInUnder = (props: any) => {
 };
 
 export const Calendar = (): JSX.Element => {
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-
   const modal1 = useDisclosure();
   const modal2 = useDisclosure();
   const onClickSelect = modal1.onOpen;
 
   const onClickEvent = modal2.onOpen;
+  // type schedules = {
+  //   id: number;
+  //   title: string;
+  //   started_at: string;
+  //   finished_at: string;
+  //   budget: number;
+  //   scheduled_by: number;
+  //   password: number;
+  // };
 
-  const { PostSchedule } = useSchedule();
+  const { PostSchedule, schedules } = useSchedule();
+
+  const { getAllSchedules, loading, allschedules } = useAllSchedules();
 
   const Today = new Date();
   // 開始時間と終了時間
@@ -235,6 +247,8 @@ export const Calendar = (): JSX.Element => {
   //部屋番号
   const [password, setPassword] = useState("");
   const [event_password, setEvent_password] = useState("");
+
+  const [eventlist, setEventlist] = useState<object[]>([]);
 
   const onChangeTitle = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -268,7 +282,7 @@ export const Calendar = (): JSX.Element => {
   //   setStartDate(e.target.value);
   // }, []);
 
-  const onClickPostSchedule = () =>
+  const onClickPostSchedule = () => {
     PostSchedule(
       title,
       stringstartdate,
@@ -276,6 +290,7 @@ export const Calendar = (): JSX.Element => {
       Number(budget),
       Number(password)
     );
+  };
 
   const ModalStyleUnderbar = styled(ModalStyle)`
     border-bottom: 1px solid #d9d9d9;
@@ -291,224 +306,237 @@ export const Calendar = (): JSX.Element => {
       title: "節分", // イベントのタイトル
       password: "4040",
       budget: "10000",
-      backgroundColor: "red", // 背景色
-      borderColor: "red", // 枠線色
-      editable: true, // イベント操作の可否
     },
     // 省略
   ];
 
+  //useallスケジュールでeventsのオブジェクトを作っちゃう
+
+  useEffect(() => getAllSchedules, []);
+
+  console.log(allschedules[0]);
+
+  // const title1 = allschedules[0].title;
+
   return (
     <>
-      <StyleWrapper>
-        <FullCalendar
-          dayCellContent={(event: DayCellContentArg) =>
-            (event.dayNumberText = event.dayNumberText.replace("日", ""))
-          }
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          locales={[jaLocale]}
-          locale="ja"
-          initialEvents={events}
-          selectable={true}
-          headerToolbar={{
-            start: "prev",
-            center: "title",
-            end: "next",
-          }}
-          // select={onClickSelect}
-          dateClick={onClickSelect}
-          eventClick={(e) => {
-            // event_title = e.event._def.title;
-            setEvent_title(e.event._def.title);
-            setEvent_start(e.event._def.extendedProps.starttime);
-            setEvent_end(e.event._def.extendedProps.endtime);
-            setEvent_budget(e.event._def.extendedProps.budget);
-            setEvent_password(e.event._def.extendedProps.password);
-            console.log(typeof event_title);
-            onClickEvent();
-          }}
-          height="600px"
-        />
-      </StyleWrapper>
-      <Modal isOpen={modal1.isOpen} onClose={modal1.onClose}>
-        <ModalOverlay />
-        <ModalContent
-          w="350px"
-          backgroundColor="baseColors.beige"
-          borderRadius="15px"
-        >
-          <ModalHeader
-            textAlign="center"
-            backgroundColor="baseColors.blue"
-            color="white"
-            height="48px"
-            borderTopLeftRadius="15px"
-            borderTopRightRadius="15px"
-            fontSize="18px"
-            alignItems="center"
-            py="10px"
-          >
-            作成
-          </ModalHeader>
-          <ModalCloseButton color="white" />
-          <ModalBody padding="0px" mt="45px">
-            <VStack spacing="15px">
-              {/* タイトル */}
-              <FormControl>
-                <InputForm
-                  placeholder="タイトル"
-                  value={title}
-                  onChange={onChangeTitle}
-                />
-              </FormControl>
-              {/* 開始時間 */}
-              <Box w="100%">
-                <FormControl>
-                  <ModalStyleUnderbar>
-                    <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
-                      開始
-                    </FormLabel>
-                    <DatePicker
-                      dateFormat="yyyy-MM-dd"
-                      selected={startdate}
-                      minDate={Today}
-                      onChange={onChangeStringStartDate}
-                    />
-                  </ModalStyleUnderbar>
-                </FormControl>
-                {/* 終了時間 */}
-                <FormControl>
-                  <ModalStyle>
-                    <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
-                      終了
-                    </FormLabel>
-                    <DatePicker
-                      locale="ja"
-                      dateFormat="yyyy-MM-dd"
-                      selected={enddate}
-                      minDate={Today}
-                      onChange={onChangeStringEndDate}
-                    />
-                  </ModalStyle>
-                </FormControl>
-              </Box>
-              {/* 予算 */}
-              <FormControl>
-                <InputForm
-                  placeholder="予算"
-                  value={budget}
-                  onChange={onChangeBudget}
-                />
-              </FormControl>
-              {/* 部屋番号 */}
-              <FormControl>
-                <InputForm
-                  placeholder="部屋番号"
-                  value={password}
-                  onChange={onChangePassword}
-                />
-              </FormControl>
-            </VStack>
-          </ModalBody>
-          <ModalFooter justifyContent="center">
-            <VStack spacing="34px" align="center">
-              <Button
-                bgColor="baseColors.gray.100"
-                w="106px"
-                h="34px"
-                fontWeight="medium"
-                fontSize="14px"
-              >
-                項目を追加
-              </Button>
-              <Button
-                bgColor="baseColors.yellow"
-                w="90px"
-                h="36px"
-                fontWeight="medium"
-                fontSize="14px"
+      {loading ? (
+        <Center h="100vh">
+          <Spinner />
+        </Center>
+      ) : (
+        <>
+          <StyleWrapper>
+            <FullCalendar
+              dayCellContent={(event: DayCellContentArg) =>
+                (event.dayNumberText = event.dayNumberText.replace("日", ""))
+              }
+              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+              initialView="dayGridMonth"
+              locales={[jaLocale]}
+              locale="ja"
+              // events={[{ title: "あ", date: "2023-08-11" }]}
+              events={allschedules}
+              selectable={true}
+              headerToolbar={{
+                start: "prev",
+                center: "title",
+                end: "next",
+              }}
+              dateClick={onClickSelect}
+              eventClick={(e) => {
+                // event_title = e.event._def.title;
+                setEvent_title(e.event._def.title);
+                setEvent_start(e.event._def.extendedProps.starttime);
+                setEvent_end(e.event._def.extendedProps.endtime);
+                setEvent_budget(e.event._def.extendedProps.budget);
+                setEvent_password(e.event._def.extendedProps.password);
+                console.log(typeof event_title);
+                onClickEvent();
+              }}
+              height="600px"
+            />
+          </StyleWrapper>
+          <Modal isOpen={modal1.isOpen} onClose={modal1.onClose}>
+            <ModalOverlay />
+            <ModalContent
+              w="350px"
+              backgroundColor="baseColors.beige"
+              borderRadius="15px"
+            >
+              <ModalHeader
+                textAlign="center"
+                backgroundColor="baseColors.blue"
                 color="white"
-                onClick={onClickPostSchedule}
+                height="48px"
+                borderTopLeftRadius="15px"
+                borderTopRightRadius="15px"
+                fontSize="18px"
+                alignItems="center"
+                py="10px"
               >
-                決定
-              </Button>
-            </VStack>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      {/* 登録した予定のモーダル --------------------------------------------------------------*/}
+                作成
+              </ModalHeader>
+              <ModalCloseButton color="white" />
+              <ModalBody padding="0px" mt="45px">
+                <VStack spacing="15px">
+                  {/* タイトル */}
+                  <FormControl>
+                    <InputForm
+                      placeholder="タイトル"
+                      value={title}
+                      onChange={onChangeTitle}
+                    />
+                  </FormControl>
+                  {/* 開始時間 */}
+                  <Box w="100%">
+                    <FormControl>
+                      <ModalStyleUnderbar>
+                        <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
+                          開始
+                        </FormLabel>
+                        <DatePicker
+                          dateFormat="yyyy-MM-dd"
+                          selected={startdate}
+                          minDate={Today}
+                          onChange={onChangeStringStartDate}
+                        />
+                      </ModalStyleUnderbar>
+                    </FormControl>
+                    {/* 終了時間 */}
+                    <FormControl>
+                      <ModalStyle>
+                        <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
+                          終了
+                        </FormLabel>
+                        <DatePicker
+                          locale="ja"
+                          dateFormat="yyyy-MM-dd"
+                          selected={enddate}
+                          minDate={Today}
+                          onChange={onChangeStringEndDate}
+                        />
+                      </ModalStyle>
+                    </FormControl>
+                  </Box>
+                  {/* 予算 */}
+                  <FormControl>
+                    <InputForm
+                      placeholder="予算"
+                      value={budget}
+                      onChange={onChangeBudget}
+                    />
+                  </FormControl>
+                  {/* 部屋番号 */}
+                  <FormControl>
+                    <InputForm
+                      placeholder="部屋番号"
+                      value={password}
+                      onChange={onChangePassword}
+                    />
+                  </FormControl>
+                </VStack>
+              </ModalBody>
+              <ModalFooter justifyContent="center">
+                <VStack spacing="34px" align="center">
+                  <Button
+                    bgColor="baseColors.gray.100"
+                    w="106px"
+                    h="34px"
+                    fontWeight="medium"
+                    fontSize="14px"
+                  >
+                    項目を追加
+                  </Button>
+                  <Button
+                    bgColor="baseColors.yellow"
+                    w="90px"
+                    h="36px"
+                    fontWeight="medium"
+                    fontSize="14px"
+                    color="white"
+                    onClick={onClickPostSchedule}
+                  >
+                    決定
+                  </Button>
+                </VStack>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+          {/* 登録した予定のモーダル --------------------------------------------------------------*/}
 
-      <Modal isOpen={modal2.isOpen} onClose={modal2.onClose}>
-        <ModalOverlay />
-        <ModalContent
-          w="350px"
-          backgroundColor="baseColors.beige"
-          borderRadius="15px"
-        >
-          <ModalHeader
-            textAlign="center"
-            backgroundColor="baseColors.blue"
-            color="white"
-            height="48px"
-            borderTopLeftRadius="15px"
-            borderTopRightRadius="15px"
-            fontSize="18px"
-            alignItems="center"
-            py="10px"
-          >
-            {event_title}
-          </ModalHeader>
-          <ModalCloseButton color="white" />
-          <ModalBody padding="0px" mt="45px">
-            <VStack spacing="15px">
-              {/* 開始時間 */}
-              <Box w="100%">
-                <FormControl>
-                  <ModalStyleUnderbar>
-                    <InputInUnder title="開始" placeholder={event_start} />
-                  </ModalStyleUnderbar>
-                </FormControl>
-                {/* 終了時間 */}
-                <FormControl>
-                  <InputForm2 title="終了" placeholder={event_end} />
-                </FormControl>
-              </Box>
-              {/* 予算 */}
-              <FormControl>
-                <InputForm2 title="予算" placeholder={event_budget} />
-              </FormControl>
-              {/* 部屋番号 */}
-              <FormControl>
-                <InputForm2 title="部屋番号" placeholder={event_password} />
-              </FormControl>
-            </VStack>
-          </ModalBody>
-          <ModalFooter justifyContent="center">
-            <VStack spacing="34px" align="center">
-              <Button
-                bgColor="baseColors.gray.100"
-                w="106px"
-                h="34px"
-                fontWeight="medium"
-                fontSize="14px"
-              >
-                編集
-              </Button>
-              <Button
-                bgColor="baseColors.yellow"
-                w="130px"
-                h="36px"
-                fontWeight="medium"
-                fontSize="14px"
+          <Modal isOpen={modal2.isOpen} onClose={modal2.onClose}>
+            <ModalOverlay />
+            <ModalContent
+              w="350px"
+              backgroundColor="baseColors.beige"
+              borderRadius="15px"
+            >
+              <ModalHeader
+                textAlign="center"
+                backgroundColor="baseColors.blue"
                 color="white"
+                height="48px"
+                borderTopLeftRadius="15px"
+                borderTopRightRadius="15px"
+                fontSize="18px"
+                alignItems="center"
+                py="10px"
               >
-                支払い入力画面へ
-              </Button>
-            </VStack>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+                {event_title}
+              </ModalHeader>
+              <ModalCloseButton color="white" />
+              <ModalBody padding="0px" mt="45px">
+                <VStack spacing="15px">
+                  {/* 開始時間 */}
+                  <Box w="100%">
+                    <FormControl>
+                      <ModalStyleUnderbar>
+                        <InputInUnder title="開始" placeholder={event_start} />
+                      </ModalStyleUnderbar>
+                    </FormControl>
+                    {/* 終了時間 */}
+                    <FormControl>
+                      <InputForm2 title="終了" placeholder={event_end} />
+                    </FormControl>
+                  </Box>
+                  {/* 予算 */}
+                  <FormControl>
+                    <InputForm2 title="予算" placeholder={event_budget} />
+                  </FormControl>
+                  {/* 部屋番号 */}
+                  <FormControl>
+                    <InputForm2 title="部屋番号" placeholder={event_password} />
+                  </FormControl>
+                </VStack>
+              </ModalBody>
+              <ModalFooter justifyContent="center">
+                <VStack spacing="34px" align="center">
+                  <Button
+                    bgColor="baseColors.gray.100"
+                    w="106px"
+                    h="34px"
+                    fontWeight="medium"
+                    fontSize="14px"
+                  >
+                    編集
+                  </Button>
+                  <Button
+                    bgColor="baseColors.yellow"
+                    w="130px"
+                    h="36px"
+                    fontWeight="medium"
+                    fontSize="14px"
+                    color="white"
+                  >
+                    支払い入力画面へ
+                  </Button>
+                </VStack>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </>
+      )}
     </>
   );
 };
