@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import React, { FC, memo, useContext } from "react";
 import {
   Avatar,
   Box,
@@ -10,8 +10,11 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { styled } from "styled-components";
+import { ModeContext } from "../../providers/ModeProvider";
 
 export const Payment: FC = memo(() => {
+  const { setModeInfo } = useContext(ModeContext);
+  setModeInfo("payment");
   // ボタンの装飾
   const ButtonStyle = styled.button`
     background-color: #e2e2e2;
@@ -72,7 +75,10 @@ export const Payment: FC = memo(() => {
           </VStack>
         </HStack>
         <Text fontSize="27px" fontWeight="semibold">
-          5300<Box as={"span"} fontSize="13px">円</Box>
+          5300
+          <Box as={"span"} fontSize="13px">
+            円
+          </Box>
         </Text>
       </Flex>
     </>

@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import React, { FC, memo, useCallback } from "react";
 import {
   Flex,
   Image,
@@ -12,8 +12,14 @@ import {
 
 import img1 from "../../../images/logo_and_moji_1.png";
 import { MenuDrawer } from "../../molecules/MenuDrawer";
+import { useHistory } from "react-router-dom";
 
 export const Header: FC = memo(() => {
+  const history = useHistory();
+
+  const onClickHome = useCallback(() => {
+    history.push("/home");
+  }, []);
   return (
     <>
       <Flex
@@ -24,7 +30,7 @@ export const Header: FC = memo(() => {
         align="center"
         px="11px"
       >
-        <Image src={img1} alt="サービスロゴ" w="100px" />
+        <Image src={img1} alt="サービスロゴ" w="100px" onClick={onClickHome} />
 
         <Menu>
           <MenuButton
