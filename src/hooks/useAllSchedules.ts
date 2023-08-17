@@ -48,6 +48,7 @@ export const useAllSchedules = () => {
           setAllshedules(addevents);
           console.log(addevents);
           console.log(allschedules);
+          // window.location.reload();
         } else {
           console.log("取得していません。");
         }

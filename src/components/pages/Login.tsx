@@ -58,7 +58,7 @@ export const Login: FC = memo(() => {
           pt={4}
           fontSize="14px"
           color="baseColors.blue"
-          onClick={onClickForget}
+          // onClick={onClickForget}
         >
           パスワードを忘れた方はこちら
         </Text>
