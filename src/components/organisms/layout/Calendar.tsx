@@ -394,6 +394,20 @@ export const Calendar = (): JSX.Element => {
               height="600px"
             />
           </StyleWrapper>
+          <Flex direction="row-reverse" mr="20px">
+            <Button
+              w="60px"
+              h="60px"
+              borderRadius="50%"
+              fontSize="30px"
+              backgroundColor="baseColors.blue"
+              color="white"
+              boxShadow="lg"
+              onClick={modal1.onOpen}
+            >
+              ＋
+            </Button>
+          </Flex>
           <Modal isOpen={modal1.isOpen} onClose={modal1.onClose}>
             <ModalOverlay />
             <ModalContent

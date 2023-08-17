@@ -19,7 +19,6 @@ export const useAuth = () => {
   const fetchRegister = useCallback((email: any, password: any) => {
     axios
       .post(
-        // "http://127.0.0.1:8000/apiapp/register/",
         "https://drf-api-kmpw.vercel.app/apiapp/register/",
         { email: email, password: password },
         {
@@ -74,7 +73,7 @@ export const useAuth = () => {
   const fetchAsyncGetProfs = useCallback(() => {
     axios
       .get(
-        "http://127.0.0.1:8000/apiapp/profile/",
+        "https://drf-api-kmpw.vercel.app/apiapp/profile/",
 
         {
           headers: {

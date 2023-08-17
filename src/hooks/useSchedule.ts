@@ -51,7 +51,7 @@ export const useSchedule = () => {
 
       axios
         .post(
-          "http://127.0.0.1:8000/apiapp/schedule/",
+          "https://drf-api-kmpw.vercel.app/apiapp/schedule/",
           {
             title: title,
             started_at: started_at,

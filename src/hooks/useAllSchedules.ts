@@ -24,7 +24,7 @@ export const useAllSchedules = () => {
   const getAllSchedules = useCallback(() => {
     setLoading(true);
     axios
-      .get("http://127.0.0.1:8000/apiapp/hostschedule/", {
+      .get("https://drf-api-kmpw.vercel.app/apiapp/hostschedule/", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `JWT ${localStorage.localJWT}`,
