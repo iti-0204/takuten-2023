@@ -40,6 +40,7 @@ import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useSchedule } from "../../../hooks/useSchedule";
 import { start } from "repl";
 import { useAllSchedules } from "../../../hooks/useAllSchedules";
+import { useHistory } from "react-router-dom";
 
 // カレンダーモーダルの装飾
 const ModalStyle = styled.div`
@@ -317,6 +318,14 @@ export const Calendar = (): JSX.Element => {
     }
   };
 
+  const history = useHistory();
+  const onClickContribute = useCallback(
+    () => history.push("/contributeproto"),
+    []
+  );
+
+  const onClickPayInfo = useCallback(() => history.push("/payinfoproto"), []);
+
   const changeEffectNum = () => {
     setEffectNum(effectNum + 1);
   };
@@ -463,6 +472,9 @@ export const Calendar = (): JSX.Element => {
                       onChange={onChangePassword}
                     />
                   </FormControl>
+                  <FormControl>
+                    <InputForm2 title="貢献度" placeholder="2   >" />
+                  </FormControl>
                 </VStack>
               </ModalBody>
               <ModalFooter justifyContent="center">
@@ -542,6 +554,9 @@ export const Calendar = (): JSX.Element => {
                   <FormControl>
                     <InputForm2 title="部屋番号" placeholder={event_password} />
                   </FormControl>
+                  <FormControl onClick={onClickContribute}>
+                    <InputForm2 title="貢献度" placeholder="2   >" />
+                  </FormControl>
                 </VStack>
               </ModalBody>
               <ModalFooter justifyContent="center">
@@ -562,6 +577,7 @@ export const Calendar = (): JSX.Element => {
                     fontWeight="medium"
                     fontSize="14px"
                     color="white"
+                    onClick={onClickPayInfo}
                   >
                     支払い入力画面へ
                   </Button>

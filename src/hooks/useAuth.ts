@@ -20,6 +20,7 @@ export const useAuth = () => {
     axios
       .post(
         "http://127.0.0.1:8000/apiapp/register/",
+        // "https://drf-api-playn.vercel.app/apiapp/register/",
         { email: email, password: password },
         {
           headers: {
