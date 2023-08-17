@@ -5,7 +5,7 @@ import { PrimaryButton } from "../atoms/button/PrimaryButton";
 import { Header } from "../organisms/layout/Header";
 import { MenuDrawer } from "../molecules/MenuDrawer";
 
-import ProtoContributeImage from "../../images/貢献度プロト.png";
+import ProtoContributeImage from "../../images/contributeprotoimage.png";
 import { useHistory } from "react-router-dom";
 
 export const ContributeProto: FC = memo(() => {

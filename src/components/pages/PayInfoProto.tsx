@@ -5,7 +5,7 @@ import { PrimaryButton } from "../atoms/button/PrimaryButton";
 import { Header } from "../organisms/layout/Header";
 import { MenuDrawer } from "../molecules/MenuDrawer";
 
-import ProtoPayInfoImage from "../../images/支払い情報プロト.png";
+import ProtoPayInfoImage from "../../images/payinfoprotoimage.png";
 import { useHistory } from "react-router-dom";
 
 export const PayInfoProto: FC = memo(() => {
