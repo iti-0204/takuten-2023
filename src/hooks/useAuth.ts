@@ -19,8 +19,8 @@ export const useAuth = () => {
   const fetchRegister = useCallback((email: any, password: any) => {
     axios
       .post(
-        "http://127.0.0.1:8000/apiapp/register/",
-        // "https://drf-api-playn.vercel.app/apiapp/register/",
+        // "http://127.0.0.1:8000/apiapp/register/",
+        "https://drf-api-kmpw.vercel.app/apiapp/register/",
         { email: email, password: password },
         {
           headers: {
@@ -43,7 +43,7 @@ export const useAuth = () => {
   const fetchAsyncLogin = useCallback((email: any, password: any) => {
     axios
       .post(
-        "http://127.0.0.1:8000/authen/jwt/create",
+        "https://drf-api-kmpw.vercel.app/authen/jwt/create",
         {
           email: email,
           password: password,

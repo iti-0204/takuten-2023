@@ -1,12 +1,14 @@
-import React, { FC, memo, useCallback } from "react";
+import React, { FC, memo, useCallback, useContext } from "react";
 import { Flex, Image, Text } from "@chakra-ui/react";
 
 import img2 from "../../images/homeIcon.png";
 import img3 from "../../images/paymentIcon.png";
 import img4 from "../../images/roomSearchIcon.png";
 import { useHistory } from "react-router-dom";
+// import { ModeContext } from "../../providers/ModeProvider";
 
 export const MenuDrawer: FC = memo(() => {
+  // const {} = useContext(ModeContext);
   const homemode = () => {
     alert("Homeモード");
   };
