@@ -3,10 +3,12 @@ import React, { useCallback } from "react";
 
 import { User } from "../types/api/user";
 import { useHistory } from "react-router-dom";
+import { useMessage } from "./useMessage";
 
 export const useAuth = () => {
   let match = false;
   const history = useHistory();
+  const { showMessage } = useMessage();
   const login = useCallback(
     (email: any, password: any) => {
       fetchAsyncLogin(email, password);
@@ -31,12 +33,18 @@ export const useAuth = () => {
         if (res.data) {
           fetchAsyncLogin(email, password);
         } else {
-          console.log(
-            "エラーが発生しました。このメールアドレスはすでに使用されている可能性があります。"
-          );
+          showMessage({
+            title: "このメールアドレスはすでに使用されている可能性があります。",
+            status: "error",
+          });
         }
       })
-      .catch((err: any) => console.log("サインアップできません"));
+      .catch(() =>
+        showMessage({
+          title: "このメールアドレスはすでに使用されている可能性があります。",
+          status: "error",
+        })
+      );
   }, []);
 
   const fetchAsyncLogin = useCallback((email: any, password: any) => {
@@ -59,15 +67,18 @@ export const useAuth = () => {
           console.log(res.data.access);
           console.log("アクセストークン取得成功");
           console.log(`JWT ${localStorage.getItem("localJWT")}`);
+          showMessage({ title: "ログインに成功しました", status: "success" });
           // fetchAsyncGetProfs();
           history.push("/home");
         } else {
-          console.log("アクセストークンでエラーが発生しました。");
+          showMessage({ title: "ユーザーが見つかりません", status: "error" });
         }
 
         // return res.data;
       })
-      .catch((err: any) => console.log("アクセストークンが取得できません"));
+      .catch(() =>
+        showMessage({ title: "ログインできません", status: "error" })
+      );
   }, []);
 
   const fetchAsyncGetProfs = useCallback(() => {
