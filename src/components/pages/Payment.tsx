@@ -40,7 +40,7 @@ export const Payment: FC = memo(() => {
   return (
     <>
       <MenuDrawer />
-      <Text textAlign="center">プロトタイプです🙇</Text>
+      <Text textAlign="center">プロトタイプです🙇‍♀️</Text>
       <Flex
         justify="space-between"
         px="14px"
