@@ -9,6 +9,7 @@ export const Notice = () => {
     <>
       <Header />
       {/* 支払い催促 */}
+      <Text textAlign="center">プロトタイプです🙇</Text>
       <Flex
         justify="space-between"
         align="center"

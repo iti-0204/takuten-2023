@@ -34,6 +34,12 @@ export const MenuDrawer: FC = memo(() => {
   const srcHome = modeInfo == "home" ? img5 : img2;
   const srcPayment = modeInfo == "payment" ? img6 : img3;
   const srcRoomSearch = modeInfo == "roomsearch" ? img7 : img4;
+  const colorHome =
+    modeInfo == "home" ? "baseColors.blue" : "baseColors.gray.100";
+  const colorPayment =
+    modeInfo == "payment" ? "baseColors.blue" : "baseColors.gray.100";
+  const colorRoomSearch =
+    modeInfo == "roomsearch" ? "baseColors.blue" : "baseColors.gray.100";
   console.log(modeInfo);
 
   return (
@@ -57,7 +63,7 @@ export const MenuDrawer: FC = memo(() => {
           <Image src={srcHome} alt="homeアイコン" boxSize="35px" />
           <Text
             fontSize="10px"
-            color="baseColors.gray.100"
+            color={colorHome}
             fontWeight="semibold"
             fontFamily="Inter"
           >
@@ -75,7 +81,7 @@ export const MenuDrawer: FC = memo(() => {
           <Image src={srcPayment} alt="paymentアイコン" boxSize="35px" />
           <Text
             fontSize="10px"
-            color="baseColors.gray.100"
+            color={colorPayment}
             fontWeight="semibold"
             fontFamily="Inter"
           >
@@ -92,7 +98,7 @@ export const MenuDrawer: FC = memo(() => {
           <Image src={srcRoomSearch} alt="roomSearchアイコン" boxSize="35px" />
           <Text
             fontSize="10px"
-            color="baseColors.gray.100"
+            color={colorRoomSearch}
             fontWeight="semibold"
             fontFamily="Inter"
           >

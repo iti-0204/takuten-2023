@@ -4,6 +4,7 @@ import React, { FC, memo, useCallback, useContext } from "react";
 import { PrimaryButton } from "../atoms/button/PrimaryButton";
 import { useHistory } from "react-router-dom";
 import { ModeContext } from "../../providers/ModeProvider";
+import { MenuDrawer } from "../molecules/MenuDrawer";
 
 export const RoomSearch: FC = memo(() => {
   const { setModeInfo } = useContext(ModeContext);
@@ -15,6 +16,7 @@ export const RoomSearch: FC = memo(() => {
   );
   return (
     <>
+      <MenuDrawer />
       <Flex
         align="center"
         justify="center"

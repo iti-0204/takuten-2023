@@ -20,6 +20,18 @@ export const Header: FC = memo(() => {
   const onClickHome = useCallback(() => {
     history.push("/home");
   }, []);
+
+  const onClickLogin = useCallback(() => {
+    history.push("/");
+  }, []);
+
+  const onClickMypage = useCallback(() => {
+    history.push("/mypage");
+  }, []);
+
+  const onClickNotice = useCallback(() => {
+    history.push("/notice");
+  }, []);
   return (
     <>
       <Flex
@@ -54,21 +66,25 @@ export const Header: FC = memo(() => {
               py="6px"
               borderTopLeftRadius="15px"
               borderTopRightRadius="15px"
+              onClick={onClickMypage}
             >
               マイページ
             </MenuItem>
-            <MenuItem py="6px">お知らせ</MenuItem>
+            <MenuItem py="6px" onClick={onClickNotice}>
+              お知らせ
+            </MenuItem>
             <MenuItem
               py="6px"
               borderBottomLeftRadius="15px"
               borderBottomRightRadius="15px"
+              onClick={onClickLogin}
             >
               ログアウト
             </MenuItem>
           </MenuList>
         </Menu>
       </Flex>
-      <MenuDrawer />
+      
     </>
   );
 });
