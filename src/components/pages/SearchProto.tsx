@@ -5,7 +5,7 @@ import { PrimaryButton } from "../atoms/button/PrimaryButton";
 import { Header } from "../organisms/layout/Header";
 import { MenuDrawer } from "../molecules/MenuDrawer";
 
-import ProtoSearchImage from "../../images/検索プロト.png";
+import ProtoSearchImage from "../../images/searchproto.png";
 import { useHistory } from "react-router-dom";
 
 export const SearchProto: FC = memo(() => {
