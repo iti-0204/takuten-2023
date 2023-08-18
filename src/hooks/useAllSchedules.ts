@@ -25,8 +25,8 @@ export const useAllSchedules = () => {
     setLoading(true);
     axios
       .get(
-        // "https://drf-api-kmpw.vercel.app/apiapp/hostschedule/",
-        "http://127.0.0.1:8000/apiapp/hostschedule/",
+        "https://drf-api-kmpw.vercel.app/apiapp/hostschedule/",
+        // "http://127.0.0.1:8000/apiapp/hostschedule/",
         {
           headers: {
             "Content-Type": "application/json",
