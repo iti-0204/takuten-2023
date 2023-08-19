@@ -81,6 +81,7 @@ export const useSchedule = () => {
             };
             setSchedules(addevents);
             console.log(addevents);
+            console.log("送信はできています！！！！！！！")
           } else {
             console.log("取得していません。");
           }

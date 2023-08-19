@@ -1,6 +1,7 @@
 import axios from "axios";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { types } from "util";
+import { ScheduleContext } from "../providers/ScheduleProvider";
 
 export const useAllSchedules = () => {
   type addschedule = {
@@ -52,6 +53,7 @@ export const useAllSchedules = () => {
           setAllshedules(addevents);
           console.log(addevents);
           console.log(allschedules);
+
           // window.location.reload();
         } else {
           console.log("取得していません。");

@@ -41,6 +41,7 @@ import { useSchedule } from "../../../hooks/useSchedule";
 import { start } from "repl";
 import { useAllSchedules } from "../../../hooks/useAllSchedules";
 import { useHistory } from "react-router-dom";
+import { useMessage } from "../../../hooks/useMessage";
 
 // カレンダーモーダルの装飾
 const ModalStyle = styled.div`
@@ -173,6 +174,26 @@ const InputForm = (props: any) => {
   );
 };
 
+const InputFormNum = (props: any) => {
+  return (
+    <>
+      <ModalStyle>
+        <FormLabel fontSize="16px" flexBasis="25%" margin="0px">
+          {props.lavel}
+        </FormLabel>
+        <Input
+          placeholder={props.placeholder}
+          variant="unstyled"
+          flexBasis="75%"
+          textAlign="right"
+          value={props.value}
+          onChange={props.onChange}
+        ></Input>
+      </ModalStyle>
+    </>
+  );
+};
+
 const InputForm2 = (props: any) => {
   return (
     <>
@@ -219,6 +240,7 @@ export const Calendar = (): JSX.Element => {
   const modal1 = useDisclosure();
   const modal2 = useDisclosure();
   const onClickClose = modal1.onClose;
+  const { showMessage } = useMessage();
 
   const onClickEvent = modal2.onOpen;
   // type schedules = {
@@ -300,21 +322,39 @@ export const Calendar = (): JSX.Element => {
   // }, []);
 
   const onClickPostSchedule = () => {
-    PostSchedule(
-      title,
-      stringstartdate,
-      stringenddate,
-      Number(budget),
-      Number(password)
-    );
-    {
-      loading2 ? (
-        <Center h="100vh">
-          <Spinner />
-        </Center>
-      ) : (
-        window.location.reload()
+    if (title === "") {
+      showMessage({ title: "タイトルを入力してください", status: "error" });
+    } else if (stringstartdate === "") {
+      showMessage({ title: "開始日付を選択してください", status: "error" });
+    } else if (stringenddate === "") {
+      showMessage({ title: "終了日付を選択してください", status: "error" });
+    } else if (budget === "") {
+      showMessage({ title: "予算を数値で入力してください", status: "error" });
+    } else if (password === "") {
+      showMessage({
+        title: "部屋番号を数値で設定してください",
+        status: "error",
+      });
+    } else {
+      PostSchedule(
+        title,
+        stringstartdate,
+        stringenddate,
+        Number(budget),
+        Number(password)
       );
+      console.log("通ってる。。。。");
+
+      {
+        loading2 ? (
+          <Center h="100vh">
+            <Spinner />
+          </Center>
+        ) : (
+          // window.location.reload()
+          console.log("リロード入る")
+        );
+      }
     }
   };
 
@@ -472,16 +512,18 @@ export const Calendar = (): JSX.Element => {
                   </Box>
                   {/* 予算 */}
                   <FormControl>
-                    <InputForm
-                      placeholder="予算"
+                    <InputFormNum
+                      lavel="予算"
+                      placeholder="予算(半角数値で入力)"
                       value={budget}
                       onChange={onChangeBudget}
                     />
                   </FormControl>
                   {/* 部屋番号 */}
                   <FormControl>
-                    <InputForm
-                      placeholder="部屋番号"
+                    <InputFormNum
+                      lavel="部屋番号"
+                      placeholder="部屋番号(半角数値で入力)"
                       value={password}
                       onChange={onChangePassword}
                     />
@@ -512,7 +554,7 @@ export const Calendar = (): JSX.Element => {
                     onClick={() => {
                       // changeEffectNum();
                       onClickPostSchedule();
-                      onClickClose();
+                      // onClickClose();
 
                       // onClickAddEvent();
                     }}
