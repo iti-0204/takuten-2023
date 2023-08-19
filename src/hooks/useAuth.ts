@@ -21,6 +21,7 @@ export const useAuth = () => {
   const fetchRegister = useCallback((email: any, password: any) => {
     axios
       .post(
+        // "https://drf-api-kmpw-jzazzjypv-eubulon3.vercel.app/apiapp/register",
         "https://drf-api-kmpw.vercel.app/apiapp/register/",
         // "http://127.0.0.1:8000/apiapp/register/",
         { email: email, password: password },
@@ -51,6 +52,7 @@ export const useAuth = () => {
   const fetchAsyncLogin = useCallback((email: any, password: any) => {
     axios
       .post(
+        // "https://drf-api-kmpw-jzazzjypv-eubulon3.vercel.app/authen/jwt/create",
         "https://drf-api-kmpw.vercel.app/authen/jwt/create",
         // "http://127.0.0.1:8000/authen/jwt/create",
         {
@@ -86,6 +88,7 @@ export const useAuth = () => {
   const fetchAsyncGetProfs = useCallback(() => {
     axios
       .get(
+        // "https://drf-api-kmpw-jzazzjypv-eubulon3.vercel.app/apiapp/profile",
         "https://drf-api-kmpw.vercel.app/apiapp/profile/",
         // "http://127.0.0.1:8000/apiapp/profile/",
 
