@@ -36,12 +36,22 @@ import {
 } from "@chakra-ui/react";
 import { ClassNames } from "@emotion/react";
 import { styled } from "styled-components";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useSchedule } from "../../../hooks/useSchedule";
 import { start } from "repl";
 import { useAllSchedules } from "../../../hooks/useAllSchedules";
 import { useHistory } from "react-router-dom";
 import { useMessage } from "../../../hooks/useMessage";
+import {
+  ScheduleContext,
+  ScheduleProvider,
+} from "../../../providers/ScheduleProvider";
 
 // カレンダーモーダルの装飾
 const ModalStyle = styled.div`
@@ -242,6 +252,8 @@ export const Calendar = (): JSX.Element => {
   const onClickClose = modal1.onClose;
   const { showMessage } = useMessage();
 
+  const { scheduleInfo, setScheduleInfo } = useContext(ScheduleContext);
+
   const onClickEvent = modal2.onOpen;
   // type schedules = {
   //   id: number;
@@ -252,7 +264,6 @@ export const Calendar = (): JSX.Element => {
   //   scheduled_by: number;
   //   password: number;
   // };
-
   const { PostSchedule, loading2, schedules } = useSchedule();
 
   const { getAllSchedules, loading, allschedules } = useAllSchedules();
@@ -343,8 +354,6 @@ export const Calendar = (): JSX.Element => {
         Number(budget),
         Number(password)
       );
-      console.log("通ってる。。。。");
-
       {
         loading2 ? (
           <Center h="100vh">
@@ -352,7 +361,8 @@ export const Calendar = (): JSX.Element => {
           </Center>
         ) : (
           // window.location.reload()
-          console.log("リロード入る")
+          onClickClose()
+          // console.log("リロード入る")
         );
       }
     }
@@ -390,7 +400,7 @@ export const Calendar = (): JSX.Element => {
 
   //useallスケジュールでeventsのオブジェクトを作っちゃう
 
-  useEffect(() => getAllSchedules, [effectNum]);
+  useEffect(() => getAllSchedules, []);
 
   const addevents = [...allschedules];
 
@@ -412,7 +422,8 @@ export const Calendar = (): JSX.Element => {
               locales={[jaLocale]}
               locale="ja"
               // events={[{ title: "あ", date: "2023-08-11" }]}
-              events={allschedules}
+              // events={allschedules}
+              events={scheduleInfo}
               selectable={true}
               headerToolbar={{
                 start: "prev",

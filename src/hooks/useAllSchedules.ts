@@ -4,7 +4,7 @@ import { types } from "util";
 import { ScheduleContext } from "../providers/ScheduleProvider";
 
 export const useAllSchedules = () => {
-  type addschedule = {
+  type addstringschedule = {
     id: string;
     start: string;
     end: string;
@@ -15,12 +15,14 @@ export const useAllSchedules = () => {
     budget: string;
   };
 
+  const { scheduleInfo, setScheduleInfo } = useContext(ScheduleContext);
+
   const [loading, setLoading] = useState(false);
-  const [allschedules, setAllshedules] = useState<Array<addschedule>>([]);
+  const [allschedules, setAllshedules] = useState<Array<addstringschedule>>([]);
 
   // const [allschedules, setAllshedules] = useState("");
 
-  const addevents: addschedule[] = [];
+  const addevents: addstringschedule[] = [];
 
   const getAllSchedules = useCallback(() => {
     setLoading(true);
@@ -51,6 +53,7 @@ export const useAllSchedules = () => {
             });
           });
           setAllshedules(addevents);
+          setScheduleInfo(addevents);
           console.log(addevents);
           console.log(allschedules);
 

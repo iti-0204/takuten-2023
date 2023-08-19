@@ -1,9 +1,13 @@
 import axios from "axios";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { ScheduleContext } from "../providers/ScheduleProvider";
+import { useAllSchedules } from "./useAllSchedules";
 
 export const useSchedule = () => {
   const history = useHistory();
+  const { scheduleInfo, setScheduleInfo } = useContext(ScheduleContext);
+  const { getAllSchedules, loading, allschedules } = useAllSchedules();
 
   const [loading2, setLoading2] = useState(false);
   const [schedules, setSchedules] = useState<Object>("");
@@ -81,10 +85,13 @@ export const useSchedule = () => {
             };
             setSchedules(addevents);
             console.log(addevents);
-            console.log("送信はできています！！！！！！！")
+            console.log("送信はできています！！！！！！！");
           } else {
             console.log("取得していません。");
           }
+        })
+        .then(() => {
+          getAllSchedules();
         })
         .catch((err: any) => console.log("登録できませんでした。"))
         .finally(() => {

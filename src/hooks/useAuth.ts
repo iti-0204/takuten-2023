@@ -4,11 +4,13 @@ import React, { useCallback } from "react";
 import { User } from "../types/api/user";
 import { useHistory } from "react-router-dom";
 import { useMessage } from "./useMessage";
+import { useAllSchedules } from "./useAllSchedules";
 
 export const useAuth = () => {
   let match = false;
   const history = useHistory();
   const { showMessage } = useMessage();
+  const { getAllSchedules, loading, allschedules } = useAllSchedules();
   const login = useCallback(
     (email: any, password: any) => {
       fetchAsyncLogin(email, password);
@@ -71,7 +73,9 @@ export const useAuth = () => {
           console.log(res.data.access);
           console.log("アクセストークン取得成功");
           console.log(`JWT ${localStorage.getItem("localJWT")}`);
+          getAllSchedules();
           showMessage({ title: "ログインに成功しました", status: "success" });
+
           // fetchAsyncGetProfs();
           history.push("/home");
         } else {
